@@ -67,7 +67,7 @@ button:disabled{opacity:.35;cursor:not-allowed}button:focus-visible,.bar:focus-v
 </main>
 <div class="dock"><div class="dockin" id="dock"></div></div>
 <script>
-const T={chip:['芯片线','#3df0ff'],solution:['配液线','#5cffb0'],origami:['折纸线','#b685ff'],merge:['汇合','#ff9f43']};
+const T={chip:['芯片线','#3df0ff'],solution:['配液线','#5cffb0'],origami:['折纸线','#b685ff'],prep:['前置：折纸制备','#ffd166'],merge:['主流程：折纸排布','#ff9f43']};
 const g=(id,n)=>[id+'-1',n,'这一阶段的完整子步骤在 protocol.json 中,原型里合并为一步展示。'];
 const S=[
 ['S1','chip','硅片清洗',[],40,20,[['S1-1','准备器具','3张无尘纸;玻璃皿垫擦镜纸;2个250 mL烧杯A、B,用Q水冲洗。'],['S1-2','丙酮超声','硅片放入A,倒入丙酮浸没,封口膜封口,放入超声清洗机并盖盖。',{p:['41%','10 min'],sec:600,free:1,eq:'超声机',w:'丙酮易燃,请在通风处操作。'}],['S1-3','异丙醇超声','A取出放无尘纸;硅片转入B,加异丙醇浸没,封口膜封口,超声。',{p:['41%','5 min'],sec:300,free:1,eq:'超声机'}],['S1-4','洗烧杯A(与上一步同时做)','丙酮倒入废液缸,依次用异丙醇、Q水清洗烧杯A。'],['S1-5','冲洗并吸干','弯头镊夹硅片,Q水冲洗;边缘靠无尘纸吸干背面;转入玻璃皿。']]],
@@ -84,11 +84,11 @@ const S=[
 ['P5','solution','成像缓冲液',['P1'],30,20,[['P5-1','方法一:配10×','3.05 g MgCl₂·6H₂O + 0.3029 g Tris,溶于40 mL Q水;1 M HCl调pH(约900 μL);定容50 mL。',{p:['pH 8.9']}],['P5-2','稀释为1×','取5 mL加45 mL Q水;使用前混匀超声,0.22 μm过滤。'],['P5-3','方法二(任选其一)','1.2 mL 1250 mM MgCl₂ + 5 mL 50 mM Tris,加水到约40 mL,调pH,定容50 mL,混匀超声后过滤。',{p:['30 mM Mg²⁺','pH 8.9']}]]],
 ['P6','solution','0.1% Tween',['P4'],25,10,[['P6-1','配5%','50 mL管中1 mL Tween 20 + 19 mL去离子水,超声。',{p:['99%','5 min'],sec:300,free:1}],['P6-2','配1%','取2 mL 5%溶液稀释到10 mL,超声。',{p:['99%','5 min'],sec:300,free:1}],['P6-3','配0.1%(现配现用)','100 μL 1%溶液 + 990 μL 1×排布缓冲液,使用前超声。',{p:['99%','2 min'],sec:120,free:1,cf:'100 + 990 μL实际约0.092%;精确0.1%应为100 + 900 μL,请确认。'}]]],
 ['P7','solution','乙醇梯度',[],15,15,[['P7-1','配五级乙醇','50 mL Corning管,CMOS级乙醇+Q水(mL):25% 12.5+37.5;50% 25+25;70% 35+15;80% 40+10;90% 45+5。分别标记浓度。']]],
-['O1','origami','折纸合成',['P3'],15,15,[['O1-1','核对原料','M13 7249 nt 100 nM;Staple混合物400 nM;10×TE/Mg²⁺;去离子水;用DNA LoBind管。'],['O1-2','依次加入','按顺序加入,总50 μL,理论20 nM,M13:Staple=1:5。',{p:['水 22.5 μL','10×TE/Mg 5 μL','Staple 12.5 μL','M13 10 μL'],nt:'Staple先离心并振荡混匀;M13用移液枪上下混匀。'}],['O1-3','混匀','用移液枪上下吹打几次混匀。']]],
-['O2','origami','PCR退火',['O1'],355,5,[['O2-1','设置退火程序','放入PCR仪:90 ℃保持5 min,再以−0.2 ℃/min降到20 ℃,最后4 ℃保存。',{p:['90→20 ℃','−0.2 ℃/min'],sec:21300,free:1,eq:'PCR仪',nt:'约5小时55分钟,这段时间可以去做芯片线和配液线。'}]]],
-['O3','origami','超滤纯化',['O2','P3'],70,25,[['O3-1','润湿滤膜','Amicon Ultra-0.5(100 kDa),离心机预冷4 ℃。加500 μL TE/Mg²⁺润湿,离心,弃滤液。',{p:['2000 rcf','6 min','4 ℃'],sec:360,free:1,eq:'离心机'}],['O3-2','上样','加50 μL未纯化折纸,补TE/Mg²⁺至最高刻度线,离心。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机'}],['O3-3','洗涤5轮','每轮:弃滤液→补TE/Mg²⁺至刻度线→离心(2000 rcf,6 min,4 ℃)。',{p:['共5轮'],cnt:5,eq:'离心机'}],['O3-4','最后一轮','加100 μL TE/Mg²⁺至刻度线,离心。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机',cf:'原文“加100 μL…至刻度线”表述不一致,请确认。'}],['O3-5','倒置收集','过滤器倒置在干净滤管上离心,收集约100 μL纯化折纸。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机'}]]],
-['O4','origami','定量·稀释',['O3'],15,15,[['O4-1','转管混匀','上下混匀滤液,转入低吸附管。'],['O4-2','NanoDrop测定','取2 μL测A260与A330,c=(A260−A330)/ε,ε=123,735,380 M⁻¹cm⁻¹。预期约5–6 nM。',{nt:'用页面下方“折纸浓度”计算。'}],['O4-3','取参考浓度','取整作为参考浓度(6.3、5.8按6 nM;7.0按6.5 nM)。'],['O4-4','稀释到200 pM','用页面下方“稀释”计算取样体积。',{cf:'原文未写稀释步骤与缓冲液,请确认。'}]]],
-['M1','merge','折纸排布',['S7','O4','P4','P5','P6'],140,40,[['M1-1','创建潮湿环境','培养皿边缘垫湿低尘纸,硅片底部轻靠湿纸后放入皿中防滑。',{w:'硅片表面全程不能脱湿。'}],['M1-2','滴加折纸并孵育','吸40 μL 200 pM折纸溶液,滴在阵列区域。',{p:['40 μL','200 pM','1 h'],sec:3600,free:1}],['M1-3','洗去未结合折纸','滴60 μL新鲜排布缓冲液吹打2–3次,从边缘吸走;至少洗8次。',{p:['≥8 次'],cnt:8,w:'始终保留溶液,不能抽干。'}],['M1-4','Tween洗涤','0.1% Tween 20,每次40 μL,洗5次,总计约1 min。',{p:['5 次'],cnt:5}],['M1-5','Tween孵育','留下刚好形成曲面液面的Tween,孵育。',{p:['30 min'],sec:1800,free:1}],['M1-6','换成像缓冲液','先40 μL轻吹,再60 μL用力快吹(会起明显气泡)。'],['M1-7','稳定孵育','滴40 μL成像缓冲液孵育。',{p:['1 h'],sec:3600,free:1}]]],
+['O1','prep','折纸合成',['P3'],15,15,[['O1-1','核对原料','M13 7249 nt 100 nM;Staple混合物400 nM;10×TE/Mg²⁺;去离子水;用DNA LoBind管。'],['O1-2','依次加入','按顺序加入,总50 μL,理论20 nM,M13:Staple=1:5。',{p:['水 22.5 μL','10×TE/Mg 5 μL','Staple 12.5 μL','M13 10 μL'],nt:'Staple先离心并振荡混匀;M13用移液枪上下混匀。'}],['O1-3','混匀','用移液枪上下吹打几次混匀。']]],
+['O2','prep','PCR退火',['O1'],355,5,[['O2-1','设置退火程序','放入PCR仪:90 ℃保持5 min,再以−0.2 ℃/min降到20 ℃,最后4 ℃保存。',{p:['90→20 ℃','−0.2 ℃/min'],sec:21300,free:1,eq:'PCR仪',nt:'约5小时55分钟,这段时间可以去做芯片线和配液线。'}]]],
+['O3','prep','超滤纯化',['O2','P3'],70,25,[['O3-1','润湿滤膜','Amicon Ultra-0.5(100 kDa),离心机预冷4 ℃。加500 μL TE/Mg²⁺润湿,离心,弃滤液。',{p:['2000 rcf','6 min','4 ℃'],sec:360,free:1,eq:'离心机'}],['O3-2','上样','加50 μL未纯化折纸,补TE/Mg²⁺至最高刻度线,离心。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机'}],['O3-3','洗涤5轮','每轮:弃滤液→补TE/Mg²⁺至刻度线→离心(2000 rcf,6 min,4 ℃)。',{p:['共5轮'],cnt:5,eq:'离心机'}],['O3-4','最后一轮','加100 μL TE/Mg²⁺至刻度线,离心。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机',cf:'原文“加100 μL…至刻度线”表述不一致,请确认。'}],['O3-5','倒置收集','过滤器倒置在干净滤管上离心,收集约100 μL纯化折纸。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机'}]]],
+['O4','prep','定量·稀释',['O3'],15,15,[['O4-1','转管混匀','上下混匀滤液,转入低吸附管。'],['O4-2','NanoDrop测定','取2 μL测A260与A330,c=(A260−A330)/ε,ε=123,735,380 M⁻¹cm⁻¹。预期约5–6 nM。',{nt:'用页面下方“折纸浓度”计算。'}],['O4-3','取参考浓度','取整作为参考浓度(6.3、5.8按6 nM;7.0按6.5 nM)。'],['O4-4','稀释到200 pM','用页面下方“稀释”计算取样体积。',{cf:'原文未写稀释步骤与缓冲液,请确认。'}]]],
+['M1','merge','折纸排布',['S7','P4','P5','P6'],140,40,[['M1-1','创建潮湿环境','培养皿边缘垫湿低尘纸,硅片底部轻靠湿纸后放入皿中防滑。',{w:'硅片表面全程不能脱湿。'}],['M1-2','滴加折纸并孵育','吸40 μL 200 pM折纸溶液,滴在阵列区域。',{p:['40 μL','200 pM','1 h'],sec:3600,free:1}],['M1-3','洗去未结合折纸','滴60 μL新鲜排布缓冲液吹打2–3次,从边缘吸走;至少洗8次。',{p:['≥8 次'],cnt:8,w:'始终保留溶液,不能抽干。'}],['M1-4','Tween洗涤','0.1% Tween 20,每次40 μL,洗5次,总计约1 min。',{p:['5 次'],cnt:5}],['M1-5','Tween孵育','留下刚好形成曲面液面的Tween,孵育。',{p:['30 min'],sec:1800,free:1}],['M1-6','换成像缓冲液','先40 μL轻吹,再60 μL用力快吹(会起明显气泡)。'],['M1-7','稳定孵育','滴40 μL成像缓冲液孵育。',{p:['1 h'],sec:3600,free:1}]]],
 ['M2','merge','乙醇梯度干燥',['M1','P7'],10,10,[['M2-1','摆放乙醇','25%、50%、70%、80%、90%乙醇按浓度相邻放在架子上。'],['M2-2','逐级浸没','塑料镊夹芯片到手心,再用弯头镊夹住,带着成像缓冲液依次浸没,每级10 s。',{p:['每级10 s'],cnt:5,seq:['25%','50%','70%','80%','90%'],w:'全程不能让芯片表面变干,连续进行。'}],['M2-3','风干','从90%取出,放手心,用塑料镊转到垫擦镜纸的干净培养皿风干。观察阵列处是否残留液滴,有则说明阵列有亲水性。']]]
 ].map(([id,t,n,d,e,h,s])=>({id,t,n,d,e,h,s:s.map(([i,sn,x,o])=>({i,n:sn,x,...(o||{})}))}));
 const by=Object.fromEntries(S.map(s=>[s.id,s]));
@@ -100,10 +100,19 @@ const total=Math.max(...S.map(s=>s.ef));
 const rows={};S.forEach(s=>{const r=rows[s.t]=rows[s.t]||[];let k=0;while(r[k]&&r[k]>s.es)k++;r[k]=s.ef;s.row=k});
 const LS='origami-v1';let sv={};try{sv=JSON.parse(localStorage.getItem(LS)||'{}')}catch(e){}
 const done=new Set(sv.done||[]),cn=sv.cn||{},timers=(sv.timers||[]).map(t=>{const l=Math.max(0,t.left-(Date.now()-(sv.ts||Date.now()))/1000);return{...t,left:l,fin:t.fin||l<=0}});
+let origamiReady=sv.origamiReady!==false;
 let sel=sv.sel||'S1',view=null,speed=1;
-function save(){try{localStorage.setItem(LS,JSON.stringify({done:[...done],cn,cv,sel,ts:Date.now(),timers}))}catch(e){}}
+function save(){try{localStorage.setItem(LS,JSON.stringify({done:[...done],cn,cv,sel,origamiReady,ts:Date.now(),timers}))}catch(e){}}
 const isDone=s=>s.s.every(x=>done.has(x.i));
-const status=s=>isDone(s)?'done':!s.d.every(d=>isDone(by[d]))?'locked':(s.s.some(x=>done.has(x.i))||timers.some(t=>t.sid===s.id))?'in_progress':'ready';
+const depsFor=s=>s.d.concat(!origamiReady&&s.id==='M1'?['O4']:[]);
+const status=s=>isDone(s)?'done':!depsFor(s).every(d=>isDone(by[d]))?'locked':(s.s.some(x=>done.has(x.i))||timers.some(t=>t.sid===s.id))?'in_progress':'ready';
+function advanceAfterDone(s){
+ const nextIndex=s.s.findIndex((y,i)=>i>(view??-1)&&!done.has(y.i));
+ if(nextIndex>=0){sel=s.id;trk=s.t;view=nextIndex;return}
+ if(s.id==='O4')origamiReady=true;
+ const next=S.find(x=>x.t!=='prep'&&!isDone(x)&&status(x)==='ready');
+ if(next){sel=next.id;trk=next.t;view=null}else{sel=s.id;trk=s.t;view=null}
+}
 const fmt=t=>{t=Math.max(0,Math.ceil(t));const h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0')};
 const cv=sv.cv||{};let trk=null;
 const mk=(title,base,items,o={})=>({t:'scale',title,base,bu:o.bu||'mL',items,fill:o.fill,fillText:o.ft});
@@ -135,18 +144,22 @@ function calcRun(sid){(CALC[sid]||[]).forEach((k,n)=>{const p=`${sid}-${n}-`,e=f
  o.textContent=t})}
 function drawTL(){
  trk=trk||by[sel].t;
- $('#kpi').innerHTML=`<div><b>${(total/60).toFixed(1)} 小时</b><span>最短总时长</span></div><div><b>${S.filter(isDone).length}/${S.length}</b><span>阶段已完成</span></div><div><b>${S.filter(s=>status(s)==='ready').length}</b><span>现在可开始</span></div>`;
+ const core=S.filter(s=>s.t!=='prep');
+ $('#kpi').innerHTML=`<div><b>${(Math.max(...core.map(s=>s.ef))/60).toFixed(1)} 小时</b><span>主流程参考时长</span></div><div><b>${core.filter(isDone).length}/${core.length}</b><span>主流程已完成</span></div><div><b>${core.filter(s=>status(s)==='ready').length}</b><span>现在可开始</span></div>`;
  const L={done:'已完成',locked:'未解锁',in_progress:'进行中',ready:'可开始'};
  const tabs=Object.keys(T).map(t=>`<button class="tab ${t===trk?'on':''}" style="--c:${T[t][1]}" data-t="${t}">${T[t][0]} <small>${S.filter(s=>s.t===t&&isDone(s)).length}/${S.filter(s=>s.t===t).length}</small></button>`).join('');
  const list=S.filter(s=>s.t===trk).sort((a,b)=>a.es-b.es);
- $('#tl').innerHTML=`<div class="tabs">${tabs}</div><div class="cards">${list.map(s=>{const st=status(s);return `<button class="sc ${st} ${s.id===sel?'sel':''}" style="--c:${T[s.t][1]}" data-id="${s.id}"><span class="sid">${s.id}</span><span class="sn">${s.n}${s.crit?'<em>关键路径</em>':''}</span><span class="sm">预计 ${s.e} 分钟 · 动手 ${s.h} 分钟</span><span class="ss">${L[st]}</span>${st==='locked'?`<span class="need">需先完成:${s.d.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}</span>`:''}</button>`}).join('')}</div>`;
+ const mode=`<div class="cf" style="border-color:${origamiReady?'#5cffb0':'#ffd166'};color:${origamiReady?'#b9ffdf':'#ffe3a1'}"><b>${origamiReady?'当前按“已有折纸”进入主流程':'当前已开启折纸制备前置流程'}</b><br><small>${origamiReady?'合成、退火、纯化和定量不计入主流程；需要时打开“前置：折纸制备”页签即可。':'完成前置模块的 O4 后会自动回到主流程。'}</small>${origamiReady?`<button class="g" id="needPrep" style="--c:#ffd166;margin-left:10px;min-height:32px;padding:0 10px;font-size:13px">我需要自己制备折纸</button>`:''}</div>`;
+ $('#tl').innerHTML=`${mode}<div class="tabs">${tabs}</div><div class="cards">${list.map(s=>{const st=status(s);const deps=depsFor(s);return `<button class="sc ${st} ${s.id===sel?'sel':''}" style="--c:${T[s.t][1]}" data-id="${s.id}"><span class="sid">${s.id}</span><span class="sn">${s.n}${s.crit?'<em>关键路径</em>':''}</span><span class="sm">预计 ${s.e} 分钟 · 动手 ${s.h} 分钟</span><span class="ss">${L[st]}</span>${st==='locked'?`<span class="need">需先完成:${deps.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}</span>`:''}</button>`}).join('')}</div>`;
+ const needPrep=$('#needPrep');if(needPrep)needPrep.onclick=()=>{origamiReady=false;sel='O1';trk='prep';view=null;render()};
  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{trk=b.dataset.t;drawTL()});
  document.querySelectorAll('.sc').forEach(b=>b.onclick=()=>{sel=b.dataset.id;view=null;render();$('#run').scrollIntoView({behavior:'smooth',block:'start'})});
 }
 function drawRun(){
  const s=by[sel],c=T[s.t][1],st=status(s),cur=s.s.findIndex(x=>!done.has(x.i)),vi=view??(cur<0?s.s.length-1:cur),x=s.s[vi],tm=timers.find(t=>t.sid===x.i);
  let h=`<span class="tag" style="--c:${c}">${T[s.t][0]}</span> <span class="tag">预计${s.e}分钟 · 动手${s.h}分钟</span><h2>${s.id} ${s.n}</h2>`;
- if(st==='locked')h+=`<p class="empty">还不能开始:请先完成 ${s.d.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}。</p>`;
+ if(s.t==='prep')h+=`<p class="sub">这是可选前置模块：只有需要现场合成和纯化折纸时才按这里操作。完成 O4 后会自动进入主流程。</p>`;
+ if(st==='locked')h+=`<p class="empty">还不能开始:请先完成 ${depsFor(s).filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}。</p>`;
  h+=`<ol class="sl" style="--c:${c}">${s.s.map((y,i)=>`<li class="${done.has(y.i)?'d':''} ${i===vi?'v':''}" data-i="${i}"><b>${i+1}</b><span>${y.n}</span>${y.sec?`<small>${fmt(y.sec)}</small>`:''}</li>`).join('')}</ol>`;
  h+=`<div class="step" style="--c:${c}"><h3>第${vi+1}步 · ${x.n}</h3>${x.x}`;
  if(x.p)h+=`<div class="params">${x.p.map(p=>`<span>${p}</span>`).join('')}</div>`;
@@ -155,7 +168,7 @@ function drawRun(){
  h+=`</div><div class="btns" style="--c:${c}">`;
  if(x.cnt&&!done.has(x.i)){const n=cn[x.i]||0;h+=`<button class="g" id="bc" ${st==='locked'||(n>=x.cnt&&x.seq)?'disabled':''}>${n>=x.cnt?'已达标 '+n+'/'+x.cnt:x.seq?'浸入 '+x.seq[n]+'('+n+'/'+x.cnt+')':'完成一次('+n+'/'+x.cnt+')'}</button>`}
  if(x.sec&&!done.has(x.i)){h+=tm?`<button class="g" id="bw" data-sid="${x.i}" disabled>计时中 ${fmt(tm.left)}</button>`:`<button class="g" id="bt" ${st==='locked'?'disabled':''}>开始计时 ${fmt(x.sec)}</button>`}
- h+=`<button class="p" id="bd" ${done.has(x.i)||st==='locked'||(tm&&!tm.fin)||(x.cnt&&(cn[x.i]||0)<x.cnt)?'disabled':''}>${done.has(x.i)?'已完成':'完成这一步'}</button>`;
+ h+=`<button class="p" id="bd" ${done.has(x.i)||st==='locked'||(tm&&!tm.fin)||(x.cnt&&(cn[x.i]||0)<x.cnt)?'disabled':''}>${done.has(x.i)?'已完成':'完成并进入下一步'}</button>`;
  if(st!=='locked'&&!isDone(s))h+=`<button class="g" id="ball">跳过本阶段</button>`;
  h+=`</div><div style="--c:${c}">${calcHTML(s.id)}</div>`;
  $('#run').innerHTML=h;
@@ -163,7 +176,7 @@ function drawRun(){
  document.querySelectorAll('.calc input').forEach(i=>i.oninput=()=>{cv[i.dataset.id]=i.value;calcRun(sel);save()});calcRun(s.id);
  const bc=$('#bc');if(bc)bc.onclick=()=>{cn[x.i]=(cn[x.i]||0)+1;save();drawRun()};
  const bt=$('#bt');if(bt)bt.onclick=()=>{timers.push({sid:x.i,stage:s.id,left:x.sec,total:x.sec,label:s.n+' · '+x.n,c,free:!!x.free,eq:x.eq});view=vi;render()};
- $('#bd').onclick=()=>{done.add(x.i);const k=timers.findIndex(t=>t.sid===x.i);if(k>=0)timers.splice(k,1);view=null;render()};
+ $('#bd').onclick=()=>{done.add(x.i);const k=timers.findIndex(t=>t.sid===x.i);if(k>=0)timers.splice(k,1);advanceAfterDone(s);render();$('#run').scrollIntoView({behavior:'smooth',block:'start'})};
  const ba=$('#ball');if(ba)ba.onclick=()=>{s.s.forEach(y=>{done.add(y.i);const k=timers.findIndex(t=>t.sid===y.i);if(k>=0)timers.splice(k,1)});view=null;render()};
 }
 function drawSide(){
@@ -175,7 +188,7 @@ function drawSide(){
  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{sel=b.dataset.go;view=null;render()});
 }
 function drawDock(){
- const d=$('#dock');d.innerHTML=(timers.length?timers.map(t=>`<div class="tm ${t.fin?'fin':''}" style="--c:${t.c}"><small>${t.label}</small><b>${t.fin?'时间到':fmt(t.left)}</b><div class="pb"><i style="width:${(1-t.left/t.total)*100}%"></i></div></div>`).join(''):'<span class="empty">没有运行中的计时器</span>')+`<div class="spd"><span>演示倍速</span><div>${[1,60,600].map(v=>`<button class="${v===speed?'on':''}" data-s="${v}">×${v}</button>`).join('')}</div><button id="rs">重置进度</button></div>`;$('#rs').onclick=()=>{done.clear();Object.keys(cn).forEach(k=>delete cn[k]);timers.length=0;sel='S1';view=null;render()};
+ const d=$('#dock');d.innerHTML=(timers.length?timers.map(t=>`<div class="tm ${t.fin?'fin':''}" style="--c:${t.c}"><small>${t.label}</small><b>${t.fin?'时间到':fmt(t.left)}</b><div class="pb"><i style="width:${(1-t.left/t.total)*100}%"></i></div></div>`).join(''):'<span class="empty">没有运行中的计时器</span>')+`<div class="spd"><span>演示倍速</span><div>${[1,60,600].map(v=>`<button class="${v===speed?'on':''}" data-s="${v}">×${v}</button>`).join('')}</div><button id="rs">重置进度</button></div>`;$('#rs').onclick=()=>{done.clear();Object.keys(cn).forEach(k=>delete cn[k]);timers.length=0;origamiReady=true;sel='S1';trk='chip';view=null;render()};
  d.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{speed=+b.dataset.s;drawDock()});
 }
 const $=q=>document.querySelector(q);
