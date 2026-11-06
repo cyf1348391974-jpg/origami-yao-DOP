@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>折纸排布向导</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#060913"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="折纸向导"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" href="icons/icon-192.png"><link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#060913;--panel:#0c1224;--line:#1c2746;--tx:#e6edff;--mut:#7f8db3;--chip:#3df0ff;--sol:#5cffb0;--ori:#b685ff;--mer:#ff9f43;--bad:#ff5d73;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(900px 500px at 85% -10%,#1b1450 0,transparent 60%),radial-gradient(700px 400px at -10% 30%,#06324a 0,transparent 55%),var(--bg);color:var(--tx);font:15px/1.55 "Chakra Petch","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;padding-bottom:150px;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:44px 44px;opacity:.25;mask-image:radial-gradient(circle at 50% 20%,#000,transparent 75%)}
+main{position:relative;max-width:1180px;margin:0 auto;padding:20px 16px}
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+h1{margin:0;font-size:28px;font-weight:700;letter-spacing:.04em}
+.sub{color:var(--mut);font-size:13px;margin-top:4px}
+.kpi{display:flex;gap:10px;flex-wrap:wrap}
+.kpi div{border:1px solid var(--line);background:#0a1020cc;padding:8px 14px;border-radius:10px;min-width:104px}
+.kpi b{display:block;font-size:22px;color:var(--chip);text-shadow:0 0 14px #3df0ff88}.kpi span{font-size:12px;color:var(--mut)}
+.box{border:1px solid var(--line);background:linear-gradient(180deg,#0e1630cc,#0a1020cc);border-radius:14px;padding:14px}
+.tl-wrap{overflow-x:auto}.tl{position:relative;min-width:760px}
+.lane{display:flex;border-top:1px dashed var(--line);padding:6px 0}.lane:first-child{border-top:0}
+.lname{width:78px;flex:none;font-weight:600;font-size:13px;padding-top:6px}
+.lbody{position:relative;flex:1}
+.bar{position:absolute;height:26px;border-radius:7px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--tx);font:500 12px "Chakra Petch",sans-serif;padding:0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;text-align:left;transition:transform .15s,box-shadow .15s}
+.bar:hover{transform:translateY(-1px);box-shadow:0 0 14px color-mix(in srgb,var(--c) 60%,transparent)}
+.bar.crit{box-shadow:0 0 0 1px var(--c),0 0 16px color-mix(in srgb,var(--c) 55%,transparent)}
+.bar.locked{opacity:.45;border-style:dashed}.bar.done{background:var(--c);color:#04101c}
+.bar.in_progress{background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--c) 30%,transparent) 0 8px,transparent 8px 16px)}
+.bar.sel{outline:2px solid #fff;outline-offset:2px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:12px;margin-top:8px}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.tag{display:inline-block;border:1px solid var(--c,var(--line));color:var(--c,var(--mut));border-radius:20px;padding:1px 10px;font-size:12px}
+h2{margin:6px 0 4px;font-size:21px}
+.dots{display:flex;gap:6px;margin:10px 0}.dots i{flex:1;height:5px;border-radius:3px;background:var(--line);cursor:pointer}.dots i.d{background:var(--c)}.dots i.v{outline:1px solid #fff}
+.step{font-size:17px;margin:8px 0}.step h3{margin:0 0 6px;font-size:20px}
+.params{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.params span{background:#050a16;border:1px solid var(--c);color:var(--c);border-radius:8px;padding:6px 12px;font-size:20px;font-weight:600;text-shadow:0 0 10px color-mix(in srgb,var(--c) 60%,transparent)}
+.warn{border-left:3px solid var(--bad);background:#ff5d731a;padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0;color:#ffc2cb;font-size:14px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button.p,button.g{font:600 16px "Chakra Petch","Noto Sans SC",sans-serif;min-height:48px;padding:0 20px;border-radius:12px;cursor:pointer;border:1px solid var(--c)}
+button.p{background:var(--c);color:#03101a;box-shadow:0 0 18px color-mix(in srgb,var(--c) 50%,transparent)}button.g{background:transparent;color:var(--c)}
+button:disabled{opacity:.35;cursor:not-allowed}button:focus-visible,.bar:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.hint{border-color:#5cffb055;background:linear-gradient(180deg,#0b2a22cc,#0a1020cc)}
+.hint h3{margin:0 0 6px;color:var(--sol);font-size:16px}.hint .it{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:7px 0;border-top:1px dashed var(--line)}.hint .it small{color:var(--mut)}
+.hint button{min-height:36px;padding:0 12px;font-size:14px}
+.dock{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:#050913ee;backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:5}
+.dockin{max-width:1180px;margin:0 auto;display:flex;gap:10px;align-items:stretch;overflow-x:auto}
+.tm{flex:none;min-width:220px;border:1px solid var(--c);border-radius:12px;padding:8px 12px;background:#0a1020}
+.tm.fin{animation:pulse 1s infinite}.tm b{font-size:24px;font-variant-numeric:tabular-nums;color:var(--c)}.tm small{display:block;color:var(--mut)}
+.pb{height:4px;background:var(--line);border-radius:3px;margin-top:4px}.pb i{display:block;height:100%;background:var(--c);border-radius:3px;box-shadow:0 0 8px var(--c)}
+.spd{margin-left:auto;flex:none;display:flex;flex-direction:column;gap:4px;justify-content:center;font-size:12px;color:var(--mut)}.spd div{display:flex;gap:4px}.spd button{background:#0a1020;color:var(--tx);border:1px solid var(--line);border-radius:6px;padding:3px 9px;cursor:pointer;font:12px "Chakra Petch",sans-serif}.spd button.on{border-color:var(--chip);color:var(--chip)}
+.empty{color:var(--mut);padding:6px 0}
+.cf{border-left:3px solid #ffd166;background:#ffd1661a;color:#ffe3a1;padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px}.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.cg label{display:flex;justify-content:space-between;align-items:center;margin:6px 0;color:var(--mut);font-size:13px}.cg input{width:120px;background:#050a16;border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:8px;font:16px "Chakra Petch",sans-serif}.cg input:focus-visible{outline:2px solid var(--chip)}output{display:block;margin-top:8px;color:var(--chip);font-size:17px;font-weight:600}.spd #rs{border-color:var(--bad);color:var(--bad)}
+@keyframes pulse{50%{box-shadow:0 0 22px var(--c)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><main>
+<header><div><h1>折纸排布向导</h1><div class="sub">芯片制备与DNA折纸排布(CYF版)· 实验向导</div></div><div class="kpi" id="kpi"></div></header>
+<section class="box"><div class="tl-wrap"><div class="tl" id="tl"></div></div>
+<div class="legend"><span>发光轮廓:关键路径,它决定最短总时长</span><span>虚线:未解锁</span><span>斜纹:进行中</span><span>实心:已完成</span></div></section>
+<div class="grid"><section class="box" id="run"></section><section id="side"></section></div>
+<section class="box" id="calc" style="margin-top:16px"><h3 style="margin:0 0 8px">计算工具</h3><div class="cg"><div><b>折纸浓度</b><label>A260<input id="a1" type="number" step="any" inputmode="decimal"></label><label>A330<input id="a2" type="number" step="any" inputmode="decimal"></label><output id="o1">输入A260和A330</output></div><div><b>稀释</b><label>母液(nM)<input id="c1" type="number" step="any" inputmode="decimal"></label><label>目标(pM)<input id="c2" type="number" value="200"></label><label>终体积(μL)<input id="c3" type="number" value="100"></label><output id="o2">输入母液浓度</output></div></div></section>
+</main>
+<div class="dock"><div class="dockin" id="dock"></div></div>
+<script>
+const T={chip:['芯片线','#3df0ff'],solution:['配液线','#5cffb0'],origami:['折纸线','#b685ff'],merge:['汇合','#ff9f43']};
+const g=(id,n)=>[id+'-1',n,'这一阶段的完整子步骤在 protocol.json 中,原型里合并为一步展示。'];
+const S=[
+['S1','chip','硅片清洗',[],40,20,[['S1-1','准备器具','3张无尘纸;玻璃皿垫擦镜纸;2个250 mL烧杯A、B,用Q水冲洗。'],['S1-2','丙酮超声','硅片放入A,倒入丙酮浸没,封口膜封口,放入超声清洗机并盖盖。',{p:['41%','10 min'],sec:600,free:1,eq:'超声机',w:'丙酮易燃,请在通风处操作。'}],['S1-3','异丙醇超声','A取出放无尘纸;硅片转入B,加异丙醇浸没,封口膜封口,超声。',{p:['41%','5 min'],sec:300,free:1,eq:'超声机'}],['S1-4','洗烧杯A(与上一步同时做)','丙酮倒入废液缸,依次用异丙醇、Q水清洗烧杯A。'],['S1-5','冲洗并吸干','弯头镊夹硅片,Q水冲洗;边缘靠无尘纸吸干背面;转入玻璃皿。']]],
+['S2','chip','Plasma亲水化',['S1'],15,8,[['S2-1','装样与设参','在超净台把硅片转入Plasma专用玻璃皿,推到舱门底部。',{p:['3 min','200 mT','80 W']}],['S2-2','运行并调气流','运行程序;抽真空一结束,立即把气体流速调到15 sccm。',{p:['15 sccm'],sec:180,w:'抽真空结束的瞬间就要调流速,请守在设备旁。'}],['S2-3','取出冷却','用镊子夹出玻璃皿,盖盖,在超净台静置冷却。']]],
+['S3','chip','HMDS硅烷化',['S2'],75,15,[['S3-1','热板脱水','硅片放上热板脱水。',{p:['180 ℃','30 s'],sec:30,w:'热板很烫,小心烫伤。'}],['S3-2','HMDS真空烘箱','用HMDS真空烘箱做疏水化处理。',{p:['150 ℃','30 min'],sec:1800,free:1}],['S3-3','热板稳定疏水基团','硅片放热板加热,稳定表面疏水基团。',{p:['150 ℃','30 min'],sec:1800,free:1}],['S3-4','避光收纳','收入硅片盒,用铝箔包好,避免白光影响HMDS。']]],
+['S4','chip','旋涂PMMA',['S3'],15,10,[['S4-1','准备匀胶机','转盘周围包铝箔(别靠着匀胶机盖子,会引入灰尘);用氮气枪吹扫硅片表面;胶不宜太多。'],['S4-2','设置匀胶参数','按两段程序设置。',{p:['800 rpm 加速度500 5 s','2500 rpm 加速度2000 90 s'],cf:'原文第②段序号缺失,PMMA型号与浓度未写,请确认。'}],['S4-3','防尘放置','匀胶后放在铝箔纸上,盖上培养皿盖。'],['S4-4','烘烤','铝箔纸连同硅片和盖子转到热板。',{p:['180 ℃','30 s'],sec:30}]]],
+['S5','chip','曝光·显影',['S4'],20,20,[['S5-1','电子束曝光(代加工)','送样给代加工方,取回后继续。',{nt:'外部步骤,时间不确定。'}],['S5-2','配显影液','50 mL管依次加30 mL CMOS级异丙醇、10 mL MIBK,震荡混匀,倒入100 mL烧杯。',{w:'MIBK易燃有刺激性,通风橱操作。'}],['S5-3','显影','塑料镊夹到手心,再用弯头镊放入显影液,立即计时。',{p:['70 s'],sec:70,w:'到点立刻取出。'}],['S5-4','终止显影','取出后立即用异丙醇洗瓶冲洗表面。'],['S5-5','冲洗吸干','Q水冲洗,背面用无尘纸擦干,放入垫擦镜纸的培养皿。']]],
+['S6','chip','Plasma活化',['S5'],10,10,[['S6-1','设参并运行','按参数运行Plasma。',{p:['200 mT','80 W','15 sccm','13 s','腔压470 mT'],sec:13,w:'运行到Plasma前腔压应约500 mT,否则需急停重跑。'}]]],
+['S7','chip','去胶',['S6'],75,15,[['S7-1','NMP超声','硅片放入NMP超声。',{p:['功率60','30 min'],sec:1800,free:1,eq:'超声机'}],['S7-2','丙酮超声','转入丙酮超声。',{p:['功率60','30 min'],sec:1800,free:1,eq:'超声机'}],['S7-3','梯度冲洗','依次用异丙醇、乙醇、Q水冲洗。'],['S7-4','擦背面并保湿','无尘布擦干背面,放入潮湿环境保存。']]],
+['P1','solution','1 M HCl',[],5,5,[['P1-1','稀释HCl','4.3 mL HCl原液用去离子水稀释并定容到50 mL(1 M)。',{w:'浓酸:戴手套护目镜,通风橱操作。'}]]],
+['P2','solution','母液',[],15,10,[['P2-1','125 mM MgCl₂','1.2706 g MgCl₂·6H₂O溶于40 mL Q水,定容50 mL。',{cf:'原文配比表用的是1250 mM MgCl₂,与此处125 mM不一致,请确认。'}],['P2-2','50 mM Tris','0.3029 g Tris溶于40 mL Q水,振荡、超声,定容50 mL;使用前混匀超声。']]],
+['P3','solution','TE/Mg²⁺',['P1'],30,20,[['P3-1','称量10×','Tris 0.6057 g、EDTA·Na₂·2H₂O 0.1861 g、MgCl₂·6H₂O 1.2706 g。'],['P3-2','溶解','Q水溶至40 mL,振荡混匀,超声。',{p:['2 min'],sec:120,free:1}],['P3-3','调pH','用1 M HCl调至pH 8.35(约950 μL–1 mL)。',{p:['pH 8.35'],cf:'原文未写定容到50 mL,请确认。'}],['P3-4','稀释过滤','取5 mL 10×稀释到50 mL混匀;0.22 μm滤头+10 mL注射器过滤到15 mL管,得1×。']]],
+['P4','solution','排布缓冲液',['P1'],30,20,[['P4-1','方法一:配10×','3.56 g MgCl₂·6H₂O + 0.3029 g Tris,溶于40 mL Q水;1 M HCl调pH(约900 μL);定容50 mL。',{p:['pH 8.35']}],['P4-2','稀释为1×','取5 mL加45 mL Q水;使用前0.22 μm过滤。'],['P4-3','方法二(任选其一)','1.4 mL 1250 mM MgCl₂ + 5 mL 50 mM Tris,加水到约40 mL,调pH,定容50 mL,过滤。',{p:['35 mM Mg²⁺','pH 8.35']}]]],
+['P5','solution','成像缓冲液',['P1'],30,20,[['P5-1','方法一:配10×','3.05 g MgCl₂·6H₂O + 0.3029 g Tris,溶于40 mL Q水;1 M HCl调pH(约900 μL);定容50 mL。',{p:['pH 8.9']}],['P5-2','稀释为1×','取5 mL加45 mL Q水;使用前混匀超声,0.22 μm过滤。'],['P5-3','方法二(任选其一)','1.2 mL 1250 mM MgCl₂ + 5 mL 50 mM Tris,加水到约40 mL,调pH,定容50 mL,混匀超声后过滤。',{p:['30 mM Mg²⁺','pH 8.9']}]]],
+['P6','solution','0.1% Tween',['P4'],25,10,[['P6-1','配5%','50 mL管中1 mL Tween 20 + 19 mL去离子水,超声。',{p:['99%','5 min'],sec:300,free:1}],['P6-2','配1%','取2 mL 5%溶液稀释到10 mL,超声。',{p:['99%','5 min'],sec:300,free:1}],['P6-3','配0.1%(现配现用)','100 μL 1%溶液 + 990 μL 1×排布缓冲液,使用前超声。',{p:['99%','2 min'],sec:120,free:1,cf:'100 + 990 μL实际约0.092%;精确0.1%应为100 + 900 μL,请确认。'}]]],
+['P7','solution','乙醇梯度',[],15,15,[['P7-1','配五级乙醇','50 mL Corning管,CMOS级乙醇+Q水(mL):25% 12.5+37.5;50% 25+25;70% 35+15;80% 40+10;90% 45+5。分别标记浓度。']]],
+['O1','origami','折纸合成',['P3'],15,15,[['O1-1','核对原料','M13 7249 nt 100 nM;Staple混合物400 nM;10×TE/Mg²⁺;去离子水;用DNA LoBind管。'],['O1-2','依次加入','按顺序加入,总50 μL,理论20 nM,M13:Staple=1:5。',{p:['水 22.5 μL','10×TE/Mg 5 μL','Staple 12.5 μL','M13 10 μL'],nt:'Staple先离心并振荡混匀;M13用移液枪上下混匀。'}],['O1-3','混匀','用移液枪上下吹打几次混匀。']]],
+['O2','origami','PCR退火',['O1'],355,5,[['O2-1','设置退火程序','放入PCR仪:90 ℃保持5 min,再以−0.2 ℃/min降到20 ℃,最后4 ℃保存。',{p:['90→20 ℃','−0.2 ℃/min'],sec:21300,free:1,eq:'PCR仪',nt:'约5小时55分钟,这段时间可以去做芯片线和配液线。'}]]],
+['O3','origami','超滤纯化',['O2','P3'],70,25,[['O3-1','润湿滤膜','Amicon Ultra-0.5(100 kDa),离心机预冷4 ℃。加500 μL TE/Mg²⁺润湿,离心,弃滤液。',{p:['2000 rcf','6 min','4 ℃'],sec:360,free:1,eq:'离心机'}],['O3-2','上样','加50 μL未纯化折纸,补TE/Mg²⁺至最高刻度线,离心。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机'}],['O3-3','洗涤5轮','每轮:弃滤液→补TE/Mg²⁺至刻度线→离心(2000 rcf,6 min,4 ℃)。',{p:['共5轮'],cnt:5,eq:'离心机'}],['O3-4','最后一轮','加100 μL TE/Mg²⁺至刻度线,离心。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机',cf:'原文“加100 μL…至刻度线”表述不一致,请确认。'}],['O3-5','倒置收集','过滤器倒置在干净滤管上离心,收集约100 μL纯化折纸。',{p:['2000 rcf','6 min'],sec:360,free:1,eq:'离心机'}]]],
+['O4','origami','定量·稀释',['O3'],15,15,[['O4-1','转管混匀','上下混匀滤液,转入低吸附管。'],['O4-2','NanoDrop测定','取2 μL测A260与A330,c=(A260−A330)/ε,ε=123,735,380 M⁻¹cm⁻¹。预期约5–6 nM。',{nt:'用页面下方“折纸浓度”计算。'}],['O4-3','取参考浓度','取整作为参考浓度(6.3、5.8按6 nM;7.0按6.5 nM)。'],['O4-4','稀释到200 pM','用页面下方“稀释”计算取样体积。',{cf:'原文未写稀释步骤与缓冲液,请确认。'}]]],
+['M1','merge','折纸排布',['S7','O4','P4','P5','P6'],140,40,[['M1-1','创建潮湿环境','培养皿边缘垫湿低尘纸,硅片底部轻靠湿纸后放入皿中防滑。',{w:'硅片表面全程不能脱湿。'}],['M1-2','滴加折纸并孵育','吸40 μL 200 pM折纸溶液,滴在阵列区域。',{p:['40 μL','200 pM','1 h'],sec:3600,free:1}],['M1-3','洗去未结合折纸','滴60 μL新鲜排布缓冲液吹打2–3次,从边缘吸走;至少洗8次。',{p:['≥8 次'],cnt:8,w:'始终保留溶液,不能抽干。'}],['M1-4','Tween洗涤','0.1% Tween 20,每次40 μL,洗5次,总计约1 min。',{p:['5 次'],cnt:5}],['M1-5','Tween孵育','留下刚好形成曲面液面的Tween,孵育。',{p:['30 min'],sec:1800,free:1}],['M1-6','换成像缓冲液','先40 μL轻吹,再60 μL用力快吹(会起明显气泡)。'],['M1-7','稳定孵育','滴40 μL成像缓冲液孵育。',{p:['1 h'],sec:3600,free:1}]]],
+['M2','merge','乙醇梯度干燥',['M1','P7'],10,10,[['M2-1','摆放乙醇','25%、50%、70%、80%、90%乙醇按浓度相邻放在架子上。'],['M2-2','逐级浸没','塑料镊夹芯片到手心,再用弯头镊夹住,带着成像缓冲液依次浸没,每级10 s。',{p:['每级10 s'],cnt:5,seq:['25%','50%','70%','80%','90%'],w:'全程不能让芯片表面变干,连续进行。'}],['M2-3','风干','从90%取出,放手心,用塑料镊转到垫擦镜纸的干净培养皿风干。观察阵列处是否残留液滴,有则说明阵列有亲水性。']]]
+].map(([id,t,n,d,e,h,s])=>({id,t,n,d,e,h,s:s.map(([i,sn,x,o])=>({i,n:sn,x,...(o||{})}))}));
+const by=Object.fromEntries(S.map(s=>[s.id,s]));
+// 关键路径
+S.forEach(s=>{s.es=Math.max(0,...s.d.map(d=>by[d].ef));s.ef=s.es+s.e});
+const total=Math.max(...S.map(s=>s.ef));
+[...S].reverse().forEach(s=>{const nx=S.filter(x=>x.d.includes(s.id));s.lf=nx.length?Math.min(...nx.map(x=>x.lf-x.e)):total;s.crit=s.lf-s.ef<1});
+// 行分配
+const rows={};S.forEach(s=>{const r=rows[s.t]=rows[s.t]||[];let k=0;while(r[k]&&r[k]>s.es)k++;r[k]=s.ef;s.row=k});
+const LS='origami-v1';let sv={};try{sv=JSON.parse(localStorage.getItem(LS)||'{}')}catch(e){}
+const done=new Set(sv.done||[]),cn=sv.cn||{},timers=(sv.timers||[]).map(t=>{const l=Math.max(0,t.left-(Date.now()-(sv.ts||Date.now()))/1000);return{...t,left:l,fin:t.fin||l<=0}});
+let sel=sv.sel||'S1',view=null,speed=1;
+function save(){try{localStorage.setItem(LS,JSON.stringify({done:[...done],cn,sel,ts:Date.now(),timers}))}catch(e){}}
+const isDone=s=>s.s.every(x=>done.has(x.i));
+const status=s=>isDone(s)?'done':!s.d.every(d=>isDone(by[d]))?'locked':(s.s.some(x=>done.has(x.i))||timers.some(t=>t.sid===s.id))?'in_progress':'ready';
+const fmt=t=>{t=Math.max(0,Math.ceil(t));const h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0')};
+function drawTL(){
+ $('#kpi').innerHTML=`<div><b>${(total/60).toFixed(1)} 小时</b><span>最短总时长</span></div><div><b>${S.filter(isDone).length}/${S.length}</b><span>阶段已完成</span></div><div><b>${S.filter(s=>status(s)==='ready').length}</b><span>现在可开始</span></div>`;
+ $('#tl').innerHTML=Object.keys(T).map(t=>{const h=(Math.max(...S.filter(s=>s.t===t).map(s=>s.row))+1)*32;
+  return `<div class="lane"><div class="lname" style="color:${T[t][1]}">${T[t][0]}</div><div class="lbody" style="height:${h}px">${S.filter(s=>s.t===t).map(s=>`<button class="bar ${status(s)} ${s.crit?'crit':''} ${s.id===sel?'sel':''}" style="--c:${T[t][1]};left:${s.es/total*100}%;width:${Math.max(s.e/total*100,2.2)}%;top:${s.row*32}px" data-id="${s.id}" title="${s.n} · 约${s.e}分钟">${s.n}</button>`).join('')}</div></div>`}).join('');
+ document.querySelectorAll('.bar').forEach(b=>b.onclick=()=>{sel=b.dataset.id;view=null;render()});
+}
+function drawRun(){
+ const s=by[sel],c=T[s.t][1],st=status(s),cur=s.s.findIndex(x=>!done.has(x.i)),vi=view??(cur<0?s.s.length-1:cur),x=s.s[vi],tm=timers.find(t=>t.sid===x.i);
+ let h=`<span class="tag" style="--c:${c}">${T[s.t][0]}</span> <span class="tag">预计${s.e}分钟 · 动手${s.h}分钟</span><h2>${s.n}</h2>`;
+ if(st==='locked'){h+=`<p class="empty">还不能开始:请先完成 ${s.d.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}。</p>`}
+ h+=`<div class="dots" style="--c:${c}">${s.s.map((y,i)=>`<i class="${done.has(y.i)?'d':''} ${i===vi?'v':''}" data-i="${i}"></i>`).join('')}</div>`;
+ h+=`<div class="step" style="--c:${c}"><h3>${x.n}</h3>${x.x}`;
+ if(x.p)h+=`<div class="params">${x.p.map(p=>`<span>${p}</span>`).join('')}</div>`;
+ if(x.w)h+=`<div class="warn">${x.w}</div>`;
+ if(x.nt)h+=`<p class="sub">${x.nt}</p>`;if(x.cf)h+=`<div class="cf">待确认:${x.cf}</div>`;
+ h+=`</div><div class="btns" style="--c:${c}">`;if(x.cnt&&!done.has(x.i)){const n=cn[x.i]||0;h+=`<button class="g" id="bc" ${st==='locked'||(n>=x.cnt&&x.seq)?'disabled':''}>${n>=x.cnt?'已达标 '+n+'/'+x.cnt:x.seq?'浸入 '+x.seq[n]+'('+n+'/'+x.cnt+')':'完成一次('+n+'/'+x.cnt+')'}</button>`}
+ if(x.sec&&!done.has(x.i)){h+=tm?`<button class="g" id="bw" data-sid="${x.i}" disabled>计时中 ${fmt(tm.left)}</button>`:`<button class="g" id="bt" ${st==='locked'?'disabled':''}>开始计时 ${fmt(x.sec)}</button>`}
+ h+=`<button class="p" id="bd" ${done.has(x.i)||st==='locked'||(tm&&!tm.fin)||(x.cnt&&(cn[x.i]||0)<x.cnt)?'disabled':''}>${done.has(x.i)?'已完成':'完成这一步'}</button>`;
+ if(st!=='locked'&&!isDone(s))h+=`<button class="g" id="ball" title="演示用:一键完成本阶段以解锁后续">跳过本阶段(演示)</button>`;
+ $('#run').innerHTML=h+'</div>';
+ document.querySelectorAll('.dots i').forEach(i=>i.onclick=()=>{view=+i.dataset.i;drawRun()});
+ const bc=$('#bc');if(bc)bc.onclick=()=>{cn[x.i]=(cn[x.i]||0)+1;save();drawRun()};const bt=$('#bt');if(bt)bt.onclick=()=>{timers.push({sid:x.i,stage:s.id,left:x.sec,total:x.sec,label:s.n+' · '+x.n,c,free:!!x.free,eq:x.eq});view=vi;render()};
+ $('#bd').onclick=()=>{done.add(x.i);const k=timers.findIndex(t=>t.sid===x.i);if(k>=0)timers.splice(k,1);view=null;render()};
+ const ba=$('#ball');if(ba)ba.onclick=()=>{s.s.forEach(y=>{done.add(y.i);const k=timers.findIndex(t=>t.sid===y.i);if(k>=0)timers.splice(k,1)});view=null;render()};
+}
+function drawSide(){
+ const run=timers.filter(t=>t.free&&!t.fin);const busy=new Set(timers.filter(t=>!t.fin).map(t=>t.eq).filter(Boolean));
+ if(!run.length){$('#side').innerHTML=`<div class="box"><h3 style="margin:0 0 6px">并行提示</h3><p class="empty">开始任意一个“免看守”计时(如丙酮超声、PCR退火),这里会列出等待期间可以同时做的事。</p></div>`;return}
+ const w=Math.min(...run.map(t=>t.left));
+ const sg=S.filter(s=>['ready','in_progress'].includes(status(s))&&s.id!==by[run[0].stage].id&&!s.s.some(x=>x.eq&&busy.has(x.eq))).map(s=>({s,fit:s.h*60<=w})).sort((a,b)=>b.fit-a.fit||a.s.h-b.s.h);
+ $('#side').innerHTML=`<div class="box hint"><h3>等待中:现在可以同时做</h3><div class="sub">剩余等待约 ${fmt(w)}</div>${sg.length?sg.map(({s,fit})=>`<div class="it"><div><span style="color:${T[s.t][1]}">${s.n}</span><br><small>动手约${s.h}分钟 · ${fit?'等待时间内能做完':'超出本次等待'}</small></div><button class="g" style="--c:${T[s.t][1]}" data-go="${s.id}">去做</button></div>`).join(''):'<p class="empty">暂时没有可并行的阶段。</p>'}</div>`;
+ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{sel=b.dataset.go;view=null;render()});
+}
+function drawDock(){
+ const d=$('#dock');d.innerHTML=(timers.length?timers.map(t=>`<div class="tm ${t.fin?'fin':''}" style="--c:${t.c}"><small>${t.label}</small><b>${t.fin?'时间到':fmt(t.left)}</b><div class="pb"><i style="width:${(1-t.left/t.total)*100}%"></i></div></div>`).join(''):'<span class="empty">没有运行中的计时器</span>')+`<div class="spd"><span>演示倍速</span><div>${[1,60,600].map(v=>`<button class="${v===speed?'on':''}" data-s="${v}">×${v}</button>`).join('')}</div><button id="rs">重置进度</button></div>`;$('#rs').onclick=()=>{done.clear();Object.keys(cn).forEach(k=>delete cn[k]);timers.length=0;sel='S1';view=null;render()};
+ d.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{speed=+b.dataset.s;drawDock()});
+}
+const $=q=>document.querySelector(q);
+function render(){drawTL();drawRun();drawSide();drawDock();save()}
+function initCalc(){const $i=id=>document.getElementById(id),v=id=>parseFloat($i(id).value);
+ const f1=()=>{const nm=(v('a1')-v('a2'))/123735380*1e9;if(isNaN(nm)){$i('o1').textContent='输入A260和A330';return}const r=Math.round(nm);$i('o1').textContent=nm.toFixed(2)+' nM,参考浓度 '+r+' nM';$i('c1').value=r;f2()};
+ const f2=()=>{const s=v('c1'),t=v('c2'),f=v('c3');if(!(s>0&&t>0&&f>0)){$i('o2').textContent='输入母液浓度';return}const u=t*f/(s*1000);$i('o2').textContent=u>f?'目标浓度高于母液':'取母液 '+u.toFixed(2)+' μL + 缓冲液 '+(f-u).toFixed(2)+' μL(稀释 '+(s*1000/t).toFixed(1)+' 倍)'};
+ ['a1','a2'].forEach(i=>$i(i).oninput=f1);['c1','c2','c3'].forEach(i=>$i(i).oninput=f2)}
+function beep(){try{const a=new AudioContext(),o=a.createOscillator();o.frequency.value=880;o.connect(a.destination);o.start();o.stop(a.currentTime+.25)}catch(e){}}
+let last=Date.now();setInterval(()=>{const n=Date.now(),dt=(n-last)/1000;last=n;let ch=false;
+ timers.forEach(t=>{if(t.fin)return;t.left-=dt*speed;if(t.left<=0){t.left=0;t.fin=true;ch=true;beep()}});
+ if(ch)render();else if(timers.length){drawDock();drawSide();const b=document.getElementById('bw');const t=b&&timers.find(t=>t.sid===b.dataset.sid);if(t&&!t.fin)b.textContent='计时中 '+fmt(t.left)}},250);
+initCalc();render();
+</script><script>if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script></body></html>
