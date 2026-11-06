@@ -92,6 +92,16 @@ const S=[
 ['M2','merge','乙醇梯度干燥',['M1','P7'],10,10,[['M2-1','摆放乙醇','25%、50%、70%、80%、90%乙醇按浓度相邻放在架子上。'],['M2-2','逐级浸没','塑料镊夹芯片到手心,再用弯头镊夹住,带着成像缓冲液依次浸没,每级10 s。',{p:['每级10 s'],cnt:5,seq:['25%','50%','70%','80%','90%'],w:'全程不能让芯片表面变干,连续进行。'}],['M2-3','风干','从90%取出,放手心,用塑料镊转到垫擦镜纸的干净培养皿风干。观察阵列处是否残留液滴,有则说明阵列有亲水性。']]]
 ].map(([id,t,n,d,e,h,s])=>({id,t,n,d,e,h,s:s.map(([i,sn,x,o])=>({i,n:sn,x,...(o||{})}))}));
 const by=Object.fromEntries(S.map(s=>[s.id,s]));
+// 按实际操作顺序编排：同一批次中的任务可以交错进行，计时等待时优先做同批次的其他任务。
+const BATCHES=[
+ {id:'start',name:'第1批｜先行准备',ids:['S1','P1','P2','P7']},
+ {id:'solution',name:'第2批｜配液集中完成',ids:['P3','P4','P5','P6']},
+ {id:'chip',name:'第3批｜芯片表面处理',ids:['S2','S3','S4','S5','S6','S7']},
+ {id:'origami',name:'第4批｜折纸制备（可选）',ids:['O1','O2','O3','O4']},
+ {id:'layout',name:'第5批｜折纸排布与干燥',ids:['M1','M2']}
+];
+const batchOf=Object.fromEntries(BATCHES.flatMap((b,i)=>b.ids.map(id=>[id,{...b,index:i}])));
+S.forEach(s=>s.batch=batchOf[s.id]);
 // 关键路径
 S.forEach(s=>{s.es=Math.max(0,...s.d.map(d=>by[d].ef));s.ef=s.es+s.e});
 const total=Math.max(...S.map(s=>s.ef));
@@ -110,7 +120,9 @@ function advanceAfterDone(s){
  const nextIndex=s.s.findIndex((y,i)=>i>(view??-1)&&!done.has(y.i));
  if(nextIndex>=0){sel=s.id;trk=s.t;view=nextIndex;return}
  if(s.id==='O4')origamiReady=true;
- const next=S.find(x=>x.t!=='prep'&&!isDone(x)&&status(x)==='ready');
+ const currentBatch=s.batch?.id;
+ const sameBatch=S.filter(x=>x.batch?.id===currentBatch&&x.id!==s.id&&(s.t==='prep'?x.t==='prep':x.t!=='prep')&&!isDone(x)&&status(x)==='ready');
+ const next=sameBatch[0]||S.find(x=>x.t!=='prep'&&!isDone(x)&&status(x)==='ready');
  if(next){sel=next.id;trk=next.t;view=null}else{sel=s.id;trk=s.t;view=null}
 }
 const fmt=t=>{t=Math.max(0,Math.ceil(t));const h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0')};
@@ -148,9 +160,9 @@ function drawTL(){
  $('#kpi').innerHTML=`<div><b>${(Math.max(...core.map(s=>s.ef))/60).toFixed(1)} 小时</b><span>主流程参考时长</span></div><div><b>${core.filter(isDone).length}/${core.length}</b><span>主流程已完成</span></div><div><b>${core.filter(s=>status(s)==='ready').length}</b><span>现在可开始</span></div>`;
  const L={done:'已完成',locked:'未解锁',in_progress:'进行中',ready:'可开始'};
  const tabs=Object.keys(T).map(t=>`<button class="tab ${t===trk?'on':''}" style="--c:${T[t][1]}" data-t="${t}">${T[t][0]} <small>${S.filter(s=>s.t===t&&isDone(s)).length}/${S.filter(s=>s.t===t).length}</small></button>`).join('');
- const list=S.filter(s=>s.t===trk).sort((a,b)=>a.es-b.es);
+ const list=S.filter(s=>s.t===trk).sort((a,b)=>a.batch.index-b.batch.index||a.es-b.es);
  const mode=`<div class="cf" style="border-color:${origamiReady?'#5cffb0':'#ffd166'};color:${origamiReady?'#b9ffdf':'#ffe3a1'}"><b>${origamiReady?'当前按“已有折纸”进入主流程':'当前已开启折纸制备前置流程'}</b><br><small>${origamiReady?'合成、退火、纯化和定量不计入主流程；需要时打开“前置：折纸制备”页签即可。':'完成前置模块的 O4 后会自动回到主流程。'}</small>${origamiReady?`<button class="g" id="needPrep" style="--c:#ffd166;margin-left:10px;min-height:32px;padding:0 10px;font-size:13px">我需要自己制备折纸</button>`:''}</div>`;
- $('#tl').innerHTML=`${mode}<div class="tabs">${tabs}</div><div class="cards">${list.map(s=>{const st=status(s);const deps=depsFor(s);return `<button class="sc ${st} ${s.id===sel?'sel':''}" style="--c:${T[s.t][1]}" data-id="${s.id}"><span class="sid">${s.id}</span><span class="sn">${s.n}${s.crit?'<em>关键路径</em>':''}</span><span class="sm">预计 ${s.e} 分钟 · 动手 ${s.h} 分钟</span><span class="ss">${L[st]}</span>${st==='locked'?`<span class="need">需先完成:${deps.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}</span>`:''}</button>`}).join('')}</div>`;
+ $('#tl').innerHTML=`${mode}<div class="tabs">${tabs}</div><div class="cards">${list.map(s=>{const st=status(s);const deps=depsFor(s);return `<button class="sc ${st} ${s.id===sel?'sel':''}" style="--c:${T[s.t][1]}" data-id="${s.id}"><span class="sid">${s.id}</span><span class="sn">${s.n}${s.crit?'<em>关键路径</em>':''}</span><span class="sm">${s.batch.name} · 预计 ${s.e} 分钟 · 动手 ${s.h} 分钟</span><span class="ss">${L[st]}</span>${st==='locked'?`<span class="need">需先完成:${deps.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}</span>`:''}</button>`}).join('')}</div>`;
  const needPrep=$('#needPrep');if(needPrep)needPrep.onclick=()=>{origamiReady=false;sel='O1';trk='prep';view=null;render()};
  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{trk=b.dataset.t;drawTL()});
  document.querySelectorAll('.sc').forEach(b=>b.onclick=()=>{sel=b.dataset.id;view=null;render();$('#run').scrollIntoView({behavior:'smooth',block:'start'})});
@@ -181,10 +193,21 @@ function drawRun(){
 }
 function drawSide(){
  const run=timers.filter(t=>t.free&&!t.fin);const busy=new Set(timers.filter(t=>!t.fin).map(t=>t.eq).filter(Boolean));
- if(!run.length){$('#side').innerHTML=`<div class="box"><h3 style="margin:0 0 6px">并行提示</h3><p class="empty">开始任意一个“免看守”计时(如丙酮超声、PCR退火),这里会列出等待期间可以同时做的事。</p></div>`;return}
- const w=Math.min(...run.map(t=>t.left));
- const sg=S.filter(s=>['ready','in_progress'].includes(status(s))&&s.id!==by[run[0].stage].id&&!s.s.some(x=>x.eq&&busy.has(x.eq))).map(s=>({s,fit:s.h*60<=w})).sort((a,b)=>b.fit-a.fit||a.s.h-b.s.h);
- $('#side').innerHTML=`<div class="box hint"><h3>等待中:现在可以同时做</h3><div class="sub">剩余等待约 ${fmt(w)}</div>${sg.length?sg.map(({s,fit})=>`<div class="it"><div><span style="color:${T[s.t][1]}">${s.n}</span><br><small>动手约${s.h}分钟 · ${fit?'等待时间内能做完':'超出本次等待'}</small></div><button class="g" style="--c:${T[s.t][1]}" data-go="${s.id}">去做</button></div>`).join(''):'<p class="empty">暂时没有可并行的阶段。</p>'}</div>`;
+ const current=by[sel]?.batch?.id;
+ const plan=BATCHES.filter(b=>!(origamiReady&&b.id==='origami')).map(b=>{
+   const ss=b.ids.map(id=>by[id]).filter(Boolean),doneN=ss.filter(isDone).length;
+   const ready=ss.filter(s=>status(s)==='ready');
+   const active=ss.some(s=>status(s)==='in_progress');
+   const mins=Math.max(...ss.map(s=>s.e),0);
+   return `<div class="it"><div><b>${b.name}</b><br><small>${doneN}/${ss.length} 完成 · 并行参考约${mins}分钟${active?' · 正在进行':''}</small>${ready.length?`<br><small style="color:${T[ready[0].t][1]}">现在可做：${ready.map(s=>s.n).join('、')}</small>`:''}</div>${ready.length?`<button class="g" style="--c:${T[ready[0].t][1]}" data-go="${ready[0].id}">${b.id===current?'继续本批':'开始本批'}</button>`:''}</div>`;
+ }).join('');
+ let waiting='';
+ if(run.length){
+   const w=Math.min(...run.map(t=>t.left));
+   const sg=S.filter(s=>(s.t!=='prep'||!origamiReady)&&['ready','in_progress'].includes(status(s))&&s.id!==by[run[0].stage]?.id&&!s.s.some(x=>x.eq&&busy.has(x.eq))).map(s=>({s,fit:s.h*60<=w})).sort((a,b)=>b.fit-a.fit||a.s.h-b.s.h);
+   waiting=`<div class="box hint"><h3>计时等待期间，继续做同批任务</h3><div class="sub">剩余等待约 ${fmt(w)}；建议不要空等</div>${sg.length?sg.map(({s,fit})=>`<div class="it"><div><span style="color:${T[s.t][1]}">${s.n}</span><br><small>动手约${s.h}分钟 · ${fit?'等待时间内能做完':'可先开始，完成后回来看计时'}</small></div><button class="g" style="--c:${T[s.t][1]}" data-go="${s.id}">去做</button></div>`).join(''):'<p class="empty">当前没有可安全并行的阶段。</p>'}</div>`;
+ }
+ $('#side').innerHTML=`<div class="box"><h3 style="margin:0 0 6px">实验时间安排</h3><p class="sub">系统已把可并行的工作合并成批次；优先完成同一批次，计时等待时切换到其他可做任务。</p>${plan}</div>${waiting}`;
  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{sel=b.dataset.go;view=null;render()});
 }
 function drawDock(){
