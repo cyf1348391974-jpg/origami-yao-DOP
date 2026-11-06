@@ -49,14 +49,21 @@ button:disabled{opacity:.35;cursor:not-allowed}button:focus-visible,.bar:focus-v
 .spd{margin-left:auto;flex:none;display:flex;flex-direction:column;gap:4px;justify-content:center;font-size:12px;color:var(--mut)}.spd div{display:flex;gap:4px}.spd button{background:#0a1020;color:var(--tx);border:1px solid var(--line);border-radius:6px;padding:3px 9px;cursor:pointer;font:12px "Chakra Petch",sans-serif}.spd button.on{border-color:var(--chip);color:var(--chip)}
 .empty{color:var(--mut);padding:6px 0}
 .cf{border-left:3px solid #ffd166;background:#ffd1661a;color:#ffe3a1;padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px}.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.cg label{display:flex;justify-content:space-between;align-items:center;margin:6px 0;color:var(--mut);font-size:13px}.cg input{width:120px;background:#050a16;border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:8px;font:16px "Chakra Petch",sans-serif}.cg input:focus-visible{outline:2px solid var(--chip)}output{display:block;margin-top:8px;color:var(--chip);font-size:17px;font-weight:600}.spd #rs{border-color:var(--bad);color:var(--bad)}
+.tl{min-width:0}.tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}.tab{flex:none;min-height:44px;padding:0 14px;border-radius:22px;border:1px solid var(--c);background:transparent;color:var(--c);font:600 15px "Chakra Petch","Noto Sans SC",sans-serif;cursor:pointer}.tab.on{background:var(--c);color:#03101a}.tab small{opacity:.85}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.sc{display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;text-align:left;padding:12px;border-radius:12px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 8%,#0a1020);color:var(--tx);cursor:pointer;font:15px "Chakra Petch","Noto Sans SC",sans-serif;min-height:68px}
+.sc .sid{grid-row:1/3;font-weight:700;color:var(--c);font-size:18px}.sc .sn{font-weight:600;font-size:16px}.sc .sn em{font-style:normal;font-size:11px;border:1px solid var(--c);border-radius:10px;padding:0 6px;margin-left:6px;color:var(--c)}.sc .sm{grid-column:2;color:var(--mut);font-size:12px}.sc .ss{grid-row:1/3;grid-column:3;font-size:12px;border:1px solid var(--c);border-radius:12px;padding:2px 9px;color:var(--c)}.sc .need{grid-column:1/4;color:var(--mut);font-size:12px;margin-top:4px}
+.sc.locked{opacity:.55;border-style:dashed}.sc.done{background:color-mix(in srgb,var(--c) 22%,#0a1020)}.sc.sel{box-shadow:0 0 0 2px #fff,0 0 16px color-mix(in srgb,var(--c) 60%,transparent)}
+.sl{list-style:none;margin:12px 0;padding:0;display:grid;gap:6px}.sl li{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;min-height:44px}.sl li b{width:26px;height:26px;border-radius:50%;border:1px solid var(--c);display:grid;place-items:center;font-size:13px;flex:none;color:var(--c)}.sl li span{flex:1}.sl li small{color:var(--mut)}.sl li.d{opacity:.6}.sl li.d b{background:var(--c);color:#03101a}.sl li.v{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.calc{margin-top:18px;border-top:1px dashed var(--line);padding-top:12px}.calc h3{margin:0 0 8px;font-size:17px;color:var(--c)}.cb{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;background:#050a16}.cb>b{font-size:15px}.cb p{margin:4px 0;font-size:13px;color:var(--mut)}.cb label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:6px 0;color:var(--mut);font-size:13px}.cb input{width:110px;background:#0a1020;border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:8px;font:16px "Chakra Petch",sans-serif}.cb input:focus-visible{outline:2px solid var(--c)}.cb output{white-space:pre-line;color:var(--c);font-size:16px;line-height:1.6}
 @keyframes pulse{50%{box-shadow:0 0 22px var(--c)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><main>
 <header><div><h1>折纸排布向导</h1><div class="sub">芯片制备与DNA折纸排布(CYF版)· 实验向导</div></div><div class="kpi" id="kpi"></div></header>
 <section class="box"><div class="tl-wrap"><div class="tl" id="tl"></div></div>
-<div class="legend"><span>发光轮廓:关键路径,它决定最短总时长</span><span>虚线:未解锁</span><span>斜纹:进行中</span><span>实心:已完成</span></div></section>
+</section>
 <div class="grid"><section class="box" id="run"></section><section id="side"></section></div>
-<section class="box" id="calc" style="margin-top:16px"><h3 style="margin:0 0 8px">计算工具</h3><div class="cg"><div><b>折纸浓度</b><label>A260<input id="a1" type="number" step="any" inputmode="decimal"></label><label>A330<input id="a2" type="number" step="any" inputmode="decimal"></label><output id="o1">输入A260和A330</output></div><div><b>稀释</b><label>母液(nM)<input id="c1" type="number" step="any" inputmode="decimal"></label><label>目标(pM)<input id="c2" type="number" value="200"></label><label>终体积(μL)<input id="c3" type="number" value="100"></label><output id="o2">输入母液浓度</output></div></div></section>
+
 </main>
 <div class="dock"><div class="dockin" id="dock"></div></div>
 <script>
@@ -94,32 +101,68 @@ const rows={};S.forEach(s=>{const r=rows[s.t]=rows[s.t]||[];let k=0;while(r[k]&&
 const LS='origami-v1';let sv={};try{sv=JSON.parse(localStorage.getItem(LS)||'{}')}catch(e){}
 const done=new Set(sv.done||[]),cn=sv.cn||{},timers=(sv.timers||[]).map(t=>{const l=Math.max(0,t.left-(Date.now()-(sv.ts||Date.now()))/1000);return{...t,left:l,fin:t.fin||l<=0}});
 let sel=sv.sel||'S1',view=null,speed=1;
-function save(){try{localStorage.setItem(LS,JSON.stringify({done:[...done],cn,sel,ts:Date.now(),timers}))}catch(e){}}
+function save(){try{localStorage.setItem(LS,JSON.stringify({done:[...done],cn,cv,sel,ts:Date.now(),timers}))}catch(e){}}
 const isDone=s=>s.s.every(x=>done.has(x.i));
 const status=s=>isDone(s)?'done':!s.d.every(d=>isDone(by[d]))?'locked':(s.s.some(x=>done.has(x.i))||timers.some(t=>t.sid===s.id))?'in_progress':'ready';
 const fmt=t=>{t=Math.max(0,Math.ceil(t));const h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0')};
+const cv=sv.cv||{};let trk=null;
+const mk=(title,base,items,o={})=>({t:'scale',title,base,bu:o.bu||'mL',items,fill:o.fill,fillText:o.ft});
+const dl=(title,c1,c1u,c2,c2u,v,vu)=>({t:'dil',title,c1,c1u,c2,c2u,v,vu});
+const CALC={
+P1:[mk('1 M HCl 配制(50 mL 方案)',50,[['HCl 原液',4.3,'mL']],{fill:1})],
+P2:[mk('125 mM MgCl₂ 母液',50,[['MgCl₂·6H₂O',1.2706,'g']],{fill:1}),mk('50 mM Tris 母液',50,[['Tris',0.3029,'g']],{fill:1})],
+P3:[mk('10×TE/Mg²⁺ 配制',50,[['Tris',0.6057,'g'],['EDTA·Na₂·2H₂O',0.1861,'g'],['MgCl₂·6H₂O',1.2706,'g']],{fill:1,ft:'溶于约40 mL Q水,调pH后定容至'}),dl('10× 稀释为 1×',10,'×',1,'×',50,'mL')],
+P4:[mk('方法一:10×排布缓冲液',50,[['MgCl₂·6H₂O',3.56,'g'],['Tris',0.3029,'g']],{fill:1,ft:'溶于约40 mL Q水,调pH 8.35后定容至'}),dl('10× 稀释为 1×',10,'×',1,'×',50,'mL'),mk('方法二:35 mM Mg²⁺ 的 1×(终体积 50 mL)',50,[['1250 mM MgCl₂',1.4,'mL'],['50 mM Tris',5,'mL']],{fill:1,ft:'加水到约40 mL,调pH 8.35后定容至'})],
+P5:[mk('方法一:10×成像缓冲液',50,[['MgCl₂·6H₂O',3.05,'g'],['Tris',0.3029,'g']],{fill:1,ft:'溶于约40 mL Q水,调pH 8.9后定容至'}),dl('10× 稀释为 1×',10,'×',1,'×',50,'mL'),mk('方法二:30 mM Mg²⁺ 的 1×(终体积 50 mL)',50,[['1250 mM MgCl₂',1.2,'mL'],['50 mM Tris',5,'mL']],{fill:1,ft:'加水到约40 mL,调pH 8.9后定容至'})],
+P6:[mk('5% Tween 20',20,[['Tween 20',1,'mL'],['去离子水',19,'mL']]),dl('5% → 1%',5,'%',1,'%',10,'mL'),dl('1% → 0.1%(现配现用)',1,'%',0.1,'%',1000,'μL')],
+P7:[mk('五级乙醇(v/v)',50,[['25% 乙醇',12.5,'mL'],['25% 水',37.5,'mL'],['50% 乙醇',25,'mL'],['50% 水',25,'mL'],['70% 乙醇',35,'mL'],['70% 水',15,'mL'],['80% 乙醇',40,'mL'],['80% 水',10,'mL'],['90% 乙醇',45,'mL'],['90% 水',5,'mL']])],
+O1:[mk('折纸合成体系(原文 50 μL,理论 20 nM)',50,[['去离子水',22.5,'μL'],['10×TE/Mg²⁺',5,'μL'],['Staple 混合物(400 nM)',12.5,'μL'],['M13 7249 nt(100 nM)',10,'μL']],{bu:'μL'})],
+O4:[{t:'conc',title:'折纸浓度(NanoDrop)'},dl('稀释到 200 pM 工作液',null,'nM',200,'pM',100,'μL')],
+M1:[dl('排布用折纸 200 pM(稀释液原文未指明)',null,'nM',200,'pM',100,'μL')]
+};
+const FX={nM:1000,pM:1},nf=x=>isFinite(x)?String(+x.toFixed(4)):'—',gv=(id,d)=>cv[id]??d??'';
+function calcHTML(sid){const L=CALC[sid];if(!L)return'';
+ return `<div class="calc"><h3>计算工具</h3>`+L.map((k,n)=>{const p=`${sid}-${n}-`;const inp=(f,lab,d,u)=>`<label>${lab}<span><input data-id="${p}${f}" type="number" step="any" inputmode="decimal" value="${gv(p+f,d)}"> ${u}</span></label>`;
+  let b=`<div class="cb"><b>${k.title}</b>`;
+  if(k.t==='scale')b+=inp('v','目标终体积',k.base,k.bu);
+  if(k.t==='dil')b+=inp('c1','母液浓度',k.c1,k.c1u)+inp('c2','目标浓度',k.c2,k.c2u)+inp('v','配制终体积',k.v,k.vu);
+  if(k.t==='conc')b+=`<p>NanoDrop 读数填下面两格(均为吸光度,无单位)。A260:260 nm 处吸光度,DNA 在此处吸收最强,代表折纸含量;A330:330 nm 处吸光度,DNA 在此不吸收,用来扣除背景。两者相减得 Δ(对应文件表格中的 260 / 330 / Δ)。</p><p>折纸浓度 c = Δ ÷ ε,ε = 123,735,380 M⁻¹cm⁻¹,结果以 nM 表示。文件预期:Δ 约 0.7,约 5–6 nM。</p>`+inp('a','A260','','(吸光度)')+inp('b','A330','','(吸光度)');
+  return b+`<output id="o-${p}"></output></div>`}).join('')+'</div>'}
+function calcRun(sid){(CALC[sid]||[]).forEach((k,n)=>{const p=`${sid}-${n}-`,e=f=>document.querySelector(`[data-id="${p+f}"]`),v=f=>parseFloat(e(f)?.value),o=document.getElementById('o-'+p);if(!o)return;let t='';
+ if(k.t==='scale'){const V=v('v');if(V>0){const r=V/k.base;t=k.items.map(([a,m,u])=>`${a}:${nf(m*r)} ${u}`).join('\n');if(k.fill)t+=`\n${k.fillText||'加水定容至'} ${nf(V)} ${k.bu}`}else t='请输入目标终体积'}
+ else if(k.t==='dil'){const c1=v('c1'),c2=v('c2'),V=v('v');if(c1>0&&c2>0&&V>0){const a=c1*(FX[k.c1u]||1),b=c2*(FX[k.c2u]||1);if(b>a)t='目标浓度高于母液浓度,无法稀释';else{const u=b*V/a;t=`取母液 ${nf(u)} ${k.vu}\n加稀释液 ${nf(V-u)} ${k.vu}\n稀释 ${nf(a/b)} 倍,终体积 ${nf(V)} ${k.vu}`}}else t='请输入母液浓度、目标浓度和终体积'}
+ else{const A=v('a'),B=v('b');if(isFinite(A)&&isFinite(B)){const d=A-B,nm=d/123735380*1e9,r=Math.round(nm);t=`Δ = ${nf(d)}\n折纸浓度 = ${nf(nm)} nM\n参考浓度(四舍五入) = ${r} nM\n文件规则:7.0 nM 取 6.5 nM,此类情况请自行判断`;['O4-1-c1','M1-0-c1'].forEach(id=>{cv[id]=r;const q=document.querySelector(`[data-id="${id}"]`);if(q)q.value=r})}else t='请输入 A260 和 A330'}
+ o.textContent=t})}
 function drawTL(){
+ trk=trk||by[sel].t;
  $('#kpi').innerHTML=`<div><b>${(total/60).toFixed(1)} 小时</b><span>最短总时长</span></div><div><b>${S.filter(isDone).length}/${S.length}</b><span>阶段已完成</span></div><div><b>${S.filter(s=>status(s)==='ready').length}</b><span>现在可开始</span></div>`;
- $('#tl').innerHTML=Object.keys(T).map(t=>{const h=(Math.max(...S.filter(s=>s.t===t).map(s=>s.row))+1)*32;
-  return `<div class="lane"><div class="lname" style="color:${T[t][1]}">${T[t][0]}</div><div class="lbody" style="height:${h}px">${S.filter(s=>s.t===t).map(s=>`<button class="bar ${status(s)} ${s.crit?'crit':''} ${s.id===sel?'sel':''}" style="--c:${T[t][1]};left:${s.es/total*100}%;width:${Math.max(s.e/total*100,2.2)}%;top:${s.row*32}px" data-id="${s.id}" title="${s.n} · 约${s.e}分钟">${s.n}</button>`).join('')}</div></div>`}).join('');
- document.querySelectorAll('.bar').forEach(b=>b.onclick=()=>{sel=b.dataset.id;view=null;render()});
+ const L={done:'已完成',locked:'未解锁',in_progress:'进行中',ready:'可开始'};
+ const tabs=Object.keys(T).map(t=>`<button class="tab ${t===trk?'on':''}" style="--c:${T[t][1]}" data-t="${t}">${T[t][0]} <small>${S.filter(s=>s.t===t&&isDone(s)).length}/${S.filter(s=>s.t===t).length}</small></button>`).join('');
+ const list=S.filter(s=>s.t===trk).sort((a,b)=>a.es-b.es);
+ $('#tl').innerHTML=`<div class="tabs">${tabs}</div><div class="cards">${list.map(s=>{const st=status(s);return `<button class="sc ${st} ${s.id===sel?'sel':''}" style="--c:${T[s.t][1]}" data-id="${s.id}"><span class="sid">${s.id}</span><span class="sn">${s.n}${s.crit?'<em>关键路径</em>':''}</span><span class="sm">预计 ${s.e} 分钟 · 动手 ${s.h} 分钟</span><span class="ss">${L[st]}</span>${st==='locked'?`<span class="need">需先完成:${s.d.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}</span>`:''}</button>`}).join('')}</div>`;
+ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{trk=b.dataset.t;drawTL()});
+ document.querySelectorAll('.sc').forEach(b=>b.onclick=()=>{sel=b.dataset.id;view=null;render();$('#run').scrollIntoView({behavior:'smooth',block:'start'})});
 }
 function drawRun(){
  const s=by[sel],c=T[s.t][1],st=status(s),cur=s.s.findIndex(x=>!done.has(x.i)),vi=view??(cur<0?s.s.length-1:cur),x=s.s[vi],tm=timers.find(t=>t.sid===x.i);
- let h=`<span class="tag" style="--c:${c}">${T[s.t][0]}</span> <span class="tag">预计${s.e}分钟 · 动手${s.h}分钟</span><h2>${s.n}</h2>`;
- if(st==='locked'){h+=`<p class="empty">还不能开始:请先完成 ${s.d.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}。</p>`}
- h+=`<div class="dots" style="--c:${c}">${s.s.map((y,i)=>`<i class="${done.has(y.i)?'d':''} ${i===vi?'v':''}" data-i="${i}"></i>`).join('')}</div>`;
- h+=`<div class="step" style="--c:${c}"><h3>${x.n}</h3>${x.x}`;
+ let h=`<span class="tag" style="--c:${c}">${T[s.t][0]}</span> <span class="tag">预计${s.e}分钟 · 动手${s.h}分钟</span><h2>${s.id} ${s.n}</h2>`;
+ if(st==='locked')h+=`<p class="empty">还不能开始:请先完成 ${s.d.filter(d=>!isDone(by[d])).map(d=>by[d].n).join('、')}。</p>`;
+ h+=`<ol class="sl" style="--c:${c}">${s.s.map((y,i)=>`<li class="${done.has(y.i)?'d':''} ${i===vi?'v':''}" data-i="${i}"><b>${i+1}</b><span>${y.n}</span>${y.sec?`<small>${fmt(y.sec)}</small>`:''}</li>`).join('')}</ol>`;
+ h+=`<div class="step" style="--c:${c}"><h3>第${vi+1}步 · ${x.n}</h3>${x.x}`;
  if(x.p)h+=`<div class="params">${x.p.map(p=>`<span>${p}</span>`).join('')}</div>`;
  if(x.w)h+=`<div class="warn">${x.w}</div>`;
  if(x.nt)h+=`<p class="sub">${x.nt}</p>`;if(x.cf)h+=`<div class="cf">待确认:${x.cf}</div>`;
- h+=`</div><div class="btns" style="--c:${c}">`;if(x.cnt&&!done.has(x.i)){const n=cn[x.i]||0;h+=`<button class="g" id="bc" ${st==='locked'||(n>=x.cnt&&x.seq)?'disabled':''}>${n>=x.cnt?'已达标 '+n+'/'+x.cnt:x.seq?'浸入 '+x.seq[n]+'('+n+'/'+x.cnt+')':'完成一次('+n+'/'+x.cnt+')'}</button>`}
+ h+=`</div><div class="btns" style="--c:${c}">`;
+ if(x.cnt&&!done.has(x.i)){const n=cn[x.i]||0;h+=`<button class="g" id="bc" ${st==='locked'||(n>=x.cnt&&x.seq)?'disabled':''}>${n>=x.cnt?'已达标 '+n+'/'+x.cnt:x.seq?'浸入 '+x.seq[n]+'('+n+'/'+x.cnt+')':'完成一次('+n+'/'+x.cnt+')'}</button>`}
  if(x.sec&&!done.has(x.i)){h+=tm?`<button class="g" id="bw" data-sid="${x.i}" disabled>计时中 ${fmt(tm.left)}</button>`:`<button class="g" id="bt" ${st==='locked'?'disabled':''}>开始计时 ${fmt(x.sec)}</button>`}
  h+=`<button class="p" id="bd" ${done.has(x.i)||st==='locked'||(tm&&!tm.fin)||(x.cnt&&(cn[x.i]||0)<x.cnt)?'disabled':''}>${done.has(x.i)?'已完成':'完成这一步'}</button>`;
- if(st!=='locked'&&!isDone(s))h+=`<button class="g" id="ball" title="演示用:一键完成本阶段以解锁后续">跳过本阶段(演示)</button>`;
- $('#run').innerHTML=h+'</div>';
- document.querySelectorAll('.dots i').forEach(i=>i.onclick=()=>{view=+i.dataset.i;drawRun()});
- const bc=$('#bc');if(bc)bc.onclick=()=>{cn[x.i]=(cn[x.i]||0)+1;save();drawRun()};const bt=$('#bt');if(bt)bt.onclick=()=>{timers.push({sid:x.i,stage:s.id,left:x.sec,total:x.sec,label:s.n+' · '+x.n,c,free:!!x.free,eq:x.eq});view=vi;render()};
+ if(st!=='locked'&&!isDone(s))h+=`<button class="g" id="ball">跳过本阶段</button>`;
+ h+=`</div><div style="--c:${c}">${calcHTML(s.id)}</div>`;
+ $('#run').innerHTML=h;
+ document.querySelectorAll('.sl li').forEach(i=>i.onclick=()=>{view=+i.dataset.i;drawRun()});
+ document.querySelectorAll('.calc input').forEach(i=>i.oninput=()=>{cv[i.dataset.id]=i.value;calcRun(sel);save()});calcRun(s.id);
+ const bc=$('#bc');if(bc)bc.onclick=()=>{cn[x.i]=(cn[x.i]||0)+1;save();drawRun()};
+ const bt=$('#bt');if(bt)bt.onclick=()=>{timers.push({sid:x.i,stage:s.id,left:x.sec,total:x.sec,label:s.n+' · '+x.n,c,free:!!x.free,eq:x.eq});view=vi;render()};
  $('#bd').onclick=()=>{done.add(x.i);const k=timers.findIndex(t=>t.sid===x.i);if(k>=0)timers.splice(k,1);view=null;render()};
  const ba=$('#ball');if(ba)ba.onclick=()=>{s.s.forEach(y=>{done.add(y.i);const k=timers.findIndex(t=>t.sid===y.i);if(k>=0)timers.splice(k,1)});view=null;render()};
 }
@@ -137,10 +180,7 @@ function drawDock(){
 }
 const $=q=>document.querySelector(q);
 function render(){drawTL();drawRun();drawSide();drawDock();save()}
-function initCalc(){const $i=id=>document.getElementById(id),v=id=>parseFloat($i(id).value);
- const f1=()=>{const nm=(v('a1')-v('a2'))/123735380*1e9;if(isNaN(nm)){$i('o1').textContent='输入A260和A330';return}const r=Math.round(nm);$i('o1').textContent=nm.toFixed(2)+' nM,参考浓度 '+r+' nM';$i('c1').value=r;f2()};
- const f2=()=>{const s=v('c1'),t=v('c2'),f=v('c3');if(!(s>0&&t>0&&f>0)){$i('o2').textContent='输入母液浓度';return}const u=t*f/(s*1000);$i('o2').textContent=u>f?'目标浓度高于母液':'取母液 '+u.toFixed(2)+' μL + 缓冲液 '+(f-u).toFixed(2)+' μL(稀释 '+(s*1000/t).toFixed(1)+' 倍)'};
- ['a1','a2'].forEach(i=>$i(i).oninput=f1);['c1','c2','c3'].forEach(i=>$i(i).oninput=f2)}
+function initCalc(){}
 function beep(){try{const a=new AudioContext(),o=a.createOscillator();o.frequency.value=880;o.connect(a.destination);o.start();o.stop(a.currentTime+.25)}catch(e){}}
 let last=Date.now();setInterval(()=>{const n=Date.now(),dt=(n-last)/1000;last=n;let ch=false;
  timers.forEach(t=>{if(t.fin)return;t.left-=dt*speed;if(t.left<=0){t.left=0;t.fin=true;ch=true;beep()}});
